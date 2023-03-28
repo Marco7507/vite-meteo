@@ -15,17 +15,17 @@ import supdevinci.vitemeteo.view.MainActivity
 
 class LocationViewModel: ViewModel(), LocationListener {
     val text: String = "Vos coordonnées GPS sont : "
-    var position: Position? = Position(3.0f, 5.0f)
+    var position: Position? = null
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
 
     public fun getPositionToString(): String {
+        if (position == null) {
+            return "Veuillez activer votre GPS"
+        }
         return text + position?.longitude + " " + position?.latitude
     }
 
-    /**
-     * get the user's position
-     */
     public fun getPosition(context: Context) {
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
