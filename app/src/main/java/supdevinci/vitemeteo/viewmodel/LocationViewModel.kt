@@ -10,6 +10,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import supdevinci.vitemeteo.model.Position
 import supdevinci.vitemeteo.view.MainActivity
 
@@ -18,6 +20,7 @@ class LocationViewModel: ViewModel(), LocationListener {
     var position: Position? = null
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
+    private lateinit var onChangeFunction: (Position) -> Unit
 
     public fun getPositionToString(): String {
         if (position == null) {
@@ -35,7 +38,13 @@ class LocationViewModel: ViewModel(), LocationListener {
         }
     }
 
+    public fun onChange(onChangeFunction: (Position) -> Unit) {
+        this.onChangeFunction = onChangeFunction
+    }
+
     override fun onLocationChanged(location: Location) {
+        println("location changed: $location")
         position = Position(location.longitude.toFloat(), location.latitude.toFloat())
+        this.onChangeFunction(position!!)
     }
 }

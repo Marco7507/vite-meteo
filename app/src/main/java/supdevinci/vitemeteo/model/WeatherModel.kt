@@ -18,37 +18,37 @@ class WeatherModel {
     }
 }
 
-class HourlyUnits {
-    var time: String = ""
-    var temperature_2m: String = ""
-    var relativehumidity_2m: String = ""
-    var precipitation_probability: String = ""
+data class HourlyUnits (
+    var time: String = "",
+    var temperature_2m: String = "",
+    var relativehumidity_2m: String = "",
+    var precipitation_probability: String = "",
     var precipitation: String = ""
-}
+)
 
-class Hourly {
-    var time: List<String> = listOf()
-    var temperature_2m: List<Float> = listOf()
-    var relativehumidity_2m: List<Float> = listOf()
-    var precipitation_probability: List<Float> = listOf()
+data class Hourly (
+    var time: List<String> = listOf(),
+    var temperature_2m: List<Float> = listOf(),
+    var relativehumidity_2m: List<Float> = listOf(),
+    var precipitation_probability: List<Float> = listOf(),
     var precipitation: List<Float> = listOf()
-}
+)
 
-class DailyUnits {
-    var time: String = ""
-    var weathercode: String = ""
-    var temperature_2m_max: String = ""
-    var temperature_2m_min: String = ""
+data class DailyUnits (
+    var time: String = "",
+    var weathercode: String = "",
+    var temperature_2m_max: String = "",
+    var temperature_2m_min: String = "",
     var precipitation_sum: String = ""
-}
+)
 
-class Daily {
-    var time: List<String> = listOf()
-    var weathercode: List<Int> = listOf()
-    var temperature_2m_max: List<Float> = listOf()
-    var temperature_2m_min: List<Float> = listOf()
+data class Daily (
+    var time: List<String> = listOf(),
+    var weathercode: List<Int> = listOf(),
+    var temperature_2m_max: List<Float> = listOf(),
+    var temperature_2m_min: List<Float> = listOf(),
     var precipitation_sum: List<Float> = listOf()
-}
+)
 
 
 
