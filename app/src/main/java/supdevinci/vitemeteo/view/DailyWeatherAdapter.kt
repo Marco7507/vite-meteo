@@ -57,7 +57,7 @@ class DailyWeatherAdapter(private val items: List<DailyWeather>): BaseAdapter() 
                 }
                 in 96..99 -> {
                     //thunderstorm
-                    ivWeather.setBackgroundResource(R.drawable.thunderstrom)
+                    ivWeather.setBackgroundResource(R.drawable.stromy)
                 }
             }
 

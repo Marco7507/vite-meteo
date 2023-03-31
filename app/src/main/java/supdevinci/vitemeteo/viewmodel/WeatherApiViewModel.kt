@@ -16,7 +16,7 @@ class WeatherApiViewModel(): ViewModel() {
 
     private val weatherApiService = WeatherApiClient.getApiService()
 
-    fun getWeather(latitude: Float, longitude: Float) {
+    fun getWeather(latitude: Double, longitude: Double) {
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
             try {

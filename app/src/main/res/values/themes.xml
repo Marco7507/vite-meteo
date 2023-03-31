@@ -14,6 +14,8 @@
         <!-- Customize your theme here. -->
         <!-- Custom font family -->
         <item name="fontFamily">@font/inter</item>
+        <!-- Custom font color -->
+        <item name="android:textColor">@color/white</item>
     </style>
     <style name="Theme.ViteMeteo.NoActionBar">
         <item name="windowActionBar">false</item>

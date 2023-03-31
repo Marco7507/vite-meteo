@@ -2,11 +2,12 @@
 <resources>
 
     <style name="city_title">
-        <item name="android:textSize">48sp</item>
-        <item name="android:textColor">#333333</item>
+        <item name="android:textSize">40sp</item>
     </style>
     <style name="temperature">
         <item name="android:textSize">64sp</item>
-        <item name="android:textColor">#333333</item>
+    </style>
+    <style name="temperatureMax">
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

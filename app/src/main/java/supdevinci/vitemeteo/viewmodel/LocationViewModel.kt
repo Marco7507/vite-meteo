@@ -8,28 +8,22 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import supdevinci.vitemeteo.model.Position
 import supdevinci.vitemeteo.view.MainActivity
+import java.util.*
 
-class LocationViewModel: ViewModel(), LocationListener {
-    val text: String = "Vos coordonnées GPS sont : "
-    var position: Position? = null
+class LocationViewModel(var context: Context): ViewModel(), LocationListener {
+    private val _position = MutableLiveData<Position>()
+    var position: LiveData<Position> = _position
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
-    private lateinit var onChangeFunction: (Position) -> Unit
+    private var positionLocked: Boolean = false
 
-    public fun getPositionToString(): String {
-        if (position == null) {
-            return "Veuillez activer votre GPS"
-        }
-        return text + position?.longitude + " " + position?.latitude
-    }
-
-    public fun getPosition(context: Context) {
+    public fun getCurrentPosition() {
+        positionLocked = false
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context as MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
@@ -38,13 +32,27 @@ class LocationViewModel: ViewModel(), LocationListener {
         }
     }
 
-    public fun onChange(onChangeFunction: (Position) -> Unit) {
-        this.onChangeFunction = onChangeFunction
+    public fun setPosition(position: Position) {
+        positionLocked = true
+        _position.postValue(position)
+    }
+
+    public fun getCityName(latitude: Double, longitude: Double): String {
+        var geocoder = android.location.Geocoder(context, Locale.getDefault())
+        var addresses = geocoder.getFromLocation(latitude, longitude, 1)
+        var cityName = "Position actuelle"
+        if (addresses != null) {
+            cityName = addresses[0].locality
+        }
+        return cityName
     }
 
     override fun onLocationChanged(location: Location) {
-        println("location changed: $location")
-        position = Position(location.longitude.toFloat(), location.latitude.toFloat())
-        this.onChangeFunction(position!!)
+        if (positionLocked) {
+            return
+        }
+        var cityName = getCityName(location.latitude, location.longitude)
+        val nextPosition = Position(location.longitude, location.latitude, cityName)
+        _position.postValue(nextPosition)
     }
 }
