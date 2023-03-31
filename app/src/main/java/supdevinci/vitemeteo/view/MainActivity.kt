@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
                     loading = false
                     initViews()
                 }
-                displayToast("Weather updated")
                 updateWeatherDisplay()
             }
         }
