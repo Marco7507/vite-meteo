@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvCurrentTemp: TextView
     private lateinit var ivWeatherIcon: ImageView
     private lateinit var tvTemperatureMinMax: TextView
+    private lateinit var ivRefreshButton: ImageView
+    private lateinit var searchBar: SearchView
     private var loading = true
 
 
@@ -46,13 +48,15 @@ class MainActivity : AppCompatActivity() {
 
         weatherApiViewModel = ViewModelProvider(this).get(WeatherApiViewModel::class.java)
         weatherApiViewModel.weather.observe(this) { weather ->
-            weather?.let {
+            if (weather != null) {
                 if (loading) {
-                    loading = false
                     initViews()
                 }
                 updateWeatherDisplay()
+            } else {
+                displayToast("Erreur lors de la récupération des données météo")
             }
+            loading = false
         }
 
         // Database Room
@@ -71,6 +75,33 @@ class MainActivity : AppCompatActivity() {
         tvCurrentTemp = findViewById(R.id.current_temp)
         ivWeatherIcon = findViewById(R.id.weather_icon)
         tvTemperatureMinMax = findViewById(R.id.temperature_min_max)
+        ivRefreshButton = findViewById(R.id.refresh_button)
+        ivRefreshButton.setOnClickListener() {
+            loading = true
+            setContentView(R.layout.loader)
+            // (c'est un choix d'utiliser la position actuelle)
+            locationViewModel.useLastCurrentPosition()
+        }
+        searchBar = findViewById(R.id.search_bar)
+
+        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    try {
+                        locationViewModel.getCityPosition(query)
+                    } catch (e: Exception) {
+                        displayToast("Ville introuvable")
+                    }
+                } else {
+                    locationViewModel.useLastCurrentPosition()
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
     private fun callWeatherApi() {
@@ -123,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                         val hour = hourly.time[i].substring(11, 13)
 
                         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                        if (hour.toInt() < currentHour) {
+                        if (hour.toInt() < currentHour && i < 24) {
                             continue
                         }
 

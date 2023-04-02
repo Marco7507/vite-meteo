@@ -17,13 +17,12 @@ import java.util.*
 
 class LocationViewModel(var context: Context): ViewModel(), LocationListener {
     private val _position = MutableLiveData<Position>()
-    var position: LiveData<Position> = _position
+    public var position: LiveData<Position> = _position
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
-    private var positionLocked: Boolean = false
+    private var currentPosition: Position? = null
 
     public fun getCurrentPosition() {
-        positionLocked = false
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context as MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
@@ -32,9 +31,21 @@ class LocationViewModel(var context: Context): ViewModel(), LocationListener {
         }
     }
 
-    public fun setPosition(position: Position) {
-        positionLocked = true
-        _position.postValue(position)
+    public fun getCityPosition(cityName: String) {
+        var geocoder = android.location.Geocoder(context, Locale.getDefault())
+        var addresses = geocoder.getFromLocationName(cityName, 1)
+        if (addresses != null && addresses.size > 0) {
+            var position = Position(addresses[0].longitude, addresses[0].latitude, cityName)
+            _position.postValue(position)
+        } else {
+            throw Exception("City not found")
+        }
+    }
+
+    public fun useLastCurrentPosition() {
+        if (currentPosition != null) {
+            _position.postValue(currentPosition!!)
+        }
     }
 
     public fun getCityName(latitude: Double, longitude: Double): String {
@@ -48,11 +59,9 @@ class LocationViewModel(var context: Context): ViewModel(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        if (positionLocked) {
-            return
-        }
         var cityName = getCityName(location.latitude, location.longitude)
         val nextPosition = Position(location.longitude, location.latitude, cityName)
         _position.postValue(nextPosition)
+        currentPosition = nextPosition
     }
 }

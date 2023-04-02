@@ -23,7 +23,6 @@ class WeatherApiViewModel(): ViewModel() {
                 val weather = weatherApiService.getWeather(latitude, longitude)
                 withContext(Dispatchers.Main) {
                     _weather.postValue(weather)
-                    println(weather)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

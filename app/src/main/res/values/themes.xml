@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.ViteMeteo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#333333</item>
-        <item name="colorPrimaryVariant">#000000</item>
+        <item name="colorPrimary">#2AB6FD</item>
+        <item name="colorPrimaryVariant">#0B50A5</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:editTextColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
         <!-- Custom font family -->
         <item name="fontFamily">@font/inter</item>
         <!-- Custom font color -->
