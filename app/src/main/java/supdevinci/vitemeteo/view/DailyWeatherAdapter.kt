@@ -36,27 +36,21 @@ class DailyWeatherAdapter(private val items: List<DailyWeather>): BaseAdapter() 
             val ivWeather = view.findViewById<ImageView>(R.id.ivWeather)
             when (dailyWeather.weatherCode) {
                 0 -> {
-                    //sunny
                     ivWeather.setBackgroundResource(R.drawable.sunny)
                 }
                 in 1..3 -> {
-                    //partly cloudy
                     ivWeather.setBackgroundResource(R.drawable.partly_cloudy)
                 }
                 45, 48 -> {
-                    //foggy
                     ivWeather.setBackgroundResource(R.drawable.cloudy)
                 }
                 in 51..57 -> {
-                    //drizzle
                     ivWeather.setBackgroundResource(R.drawable.rainy)
                 }
                 in 60..67, in 80..83 -> {
-                    //rainy
                     ivWeather.setBackgroundResource(R.drawable.rainy)
                 }
                 in 96..99 -> {
-                    //thunderstorm
                     ivWeather.setBackgroundResource(R.drawable.stromy)
                 }
             }
